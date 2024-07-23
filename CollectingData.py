@@ -6,7 +6,7 @@ import random
 
 
 TIME_INCREMENT = 1 #in seconds
-test = True
+test = False
 
 FILENAME = "test.csv"
 
@@ -40,14 +40,23 @@ def updateFile (filename, row):
 """DATA COLLECTION"""
 index = count()
 
+def collectData():
+    time = next(index) * TIME_INCREMENT
+    ch1V = random.randint(0,10)
+    ch1K = random.randint(0,10)
+    ch2V = random.randint(0,10)
+    ch2K = random.randint(0,10)
+    row = [time, ch1V, ch1K, ch2V, ch2K]
+    updateFile(FILENAME, row)
+
 if (not test):
     # Connect to the first available Model 240 over USB
     my_model_240 = Model240()
 
     # Define the channel configuration for a sensor with a negative temperature coefficient, autorange disabled
     # current reversal disabled, the channel enabled, and set to the 100 kOhm range
-    rtd_config = Model240InputParameter(my_model_240.SensorTypes.NTC_RTD, False, False, my_model_240.Units.SENSOR, True,
-                                        my_model_240.InputRange.RANGE_NTCRTD_100_KIL_OHMS)
+    rtd_config = Model240InputParameter(my_model_240.SensorTypes.DIODE, False, False, my_model_240.Units.KELVIN, True,
+                                        my_model_240.InputRange.RANGE_DIODE)
 
     # Apply the configuration to all channels
     for channel in range(1, 3):
@@ -64,12 +73,3 @@ if (not test):
 
         row = [time, ch1V, ch1K, ch2V, ch2K]
         updateFile(FILENAME, row)
-
-def testCollect():
-    time = next(index) * TIME_INCREMENT
-    ch1V = random.randint(0,10)
-    ch1K = random.randint(0,10)
-    ch2V = random.randint(0,10)
-    ch2K = random.randint(0,10)
-    row = [time, ch1V, ch1K, ch2V, ch2K]
-    updateFile(FILENAME, row)
