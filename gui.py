@@ -37,8 +37,7 @@ plt = f.add_subplot(111)
 def animate(i):
     """'loop' for data collection"""
     if (isRunning):
-        #CollectingData.collectData()
-        CollectingData.testCollect()
+        CollectingData.collectData()
 
     pullData = open(FILENAME,"r").read()
     dataList = pullData.split('\n')
@@ -55,22 +54,18 @@ def animate(i):
             timeList.insert(0, float(vals[0]))
             ch1VList.insert(0, float(vals[1]))
             ch1KList.insert(0, float(vals[2]))
-            ch2VList.insert(0, int(vals[3]))
-            ch2KList.insert(0, int(vals[4]))
+            ch2VList.insert(0, float(vals[3]))
+            ch2KList.insert(0, float(vals[4]))
 
     plt.clear()
-
-    if (chChoosen.get() == ' Channel 1'):
-        if (len(ch1KList) > 0 ):
-            temp.set(str(ch1KList[len(ch1KList)-1]) + "K")
-        plt.plot(timeList, ch1VList, label="voltage (V)")
-        plt.plot(timeList, ch1KList, label="temperature (K)")
-
-    if (chChoosen.get() == ' Channel 2'):
-        if (len(ch2KList) > 0 ):
-            temp.set(str(ch2KList[len(ch2KList)-1]) + "K")
-        plt.plot(timeList, ch2VList, label="voltage (V)")
-        plt.plot(timeList, ch2KList, label="temperature (K)")
+    
+    if (len(ch1KList) > 0 ):
+        temp1.set(str(ch1KList[len(ch1KList)-1]) + "K")
+        temp2.set(str(ch2KList[len(ch2KList)-1]) + "K")
+    #plt.plot(timeList, ch1VList, label="voltage (V)")
+    plt.plot(timeList, ch1KList, label="Ch1 temperature (K)")
+    #plt.plot(timeList, ch2VList, label="voltage (V)")
+    plt.plot(timeList, ch2KList, label="Ch2 temperature (K)")
     
     plt.legend(loc="upper right")
 
@@ -97,20 +92,15 @@ button.place(x=20, y=20)
 
 
 """TEMPERATURE LABEL"""
-temp = tk.StringVar()
-temp.set("0.0K")
-tempLabel = tk.Label(window, textvariable=temp, bd=0, font=("Arial", 40), bg="white")
-tempLabel.place(x=500, y=20)
+temp1 = tk.StringVar()
+temp1.set("0.0K")
+temp1Label = tk.Label(window, textvariable=temp1, bd=0, font=("Arial", 40), bg="white")
+temp1Label.place(x=200, y=20)
 
-
-"""COMBOBOX FOR SELECTING CHANNEL"""
-chLabel = tk.Label(window, text="Channel:", font=("Arial", 10), bg="white")
-chLabel.place(x=190, y=25)
-n = tk.StringVar()
-chChoosen = ttk.Combobox(window, width=27, textvariable=n)
-chChoosen['values'] = (' Channel 1', ' Channel 2')
-chChoosen.current(0)
-chChoosen.place(x=250, y=25)
+temp2 = tk.StringVar()
+temp2.set("0.0K")
+temp2Label = tk.Label(window, textvariable=temp2, bd=0, font=("Arial", 40), bg="white")
+temp2Label.place(x=450, y=20)
 
 
 ani = animation.FuncAnimation(f, animate, interval = 1000 * TIME_INCREMENT, cache_frame_data=False)
